@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+
+# Environment files
+.env
+.env.*
+!.env.example
+!.env.sample
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build / runtime output
+build/
+dist/
+coverage/
+*.pid
+*.seed
+*.pid.lock
+
+# Cache and temp files
+.cache/
+.tmp/
+tmp/
+*.tsbuildinfo
+
+# OS / editor files
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Database / local data
+*.sqlite
+*.sqlite3
+*.db

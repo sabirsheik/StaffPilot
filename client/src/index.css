@@ -1,0 +1,229 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+    font-feature-settings: 'liga' 1, 'calt' 1;
+    --app-canvas: #ffffff;
+    --app-line: #e2e8f0;
+    --app-ink: #0f172a;
+    --primary: #dc2626;
+    --primary-hover: #b91c1c;
+    --surface: #ffffff;
+    --surface-muted: #ffffff;
+    --text-primary: #0f172a;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply min-h-screen text-slate-800 antialiased;
+    background-color: var(--surface);
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+
+  #root {
+    @apply min-h-screen;
+  }
+
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    @apply bg-brand-500/20 text-brand-900;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #edf1f5;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full;
+    background: #b8c3cf;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply border border-slate-200 bg-white shadow-card;
+    border-radius: 0;
+  }
+
+  .card {
+    @apply rounded-md border border-slate-200 bg-white shadow-card;
+    border-radius: 2px;
+  }
+
+  .card-hover {
+    @apply transition-colors duration-150 hover:border-brand-300/60;
+  }
+
+  .input-base {
+    @apply w-full rounded-md border border-slate-300 bg-white px-3.5 py-2.5
+      text-slate-900 placeholder:text-slate-400
+      focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500
+      transition-colors duration-150 shadow-none;
+    border-radius: 2px;
+  }
+
+  .input-error {
+    @apply border-red-500/70 focus:ring-red-500/25 focus:border-red-500;
+  }
+
+  .label-base {
+    @apply block text-sm font-medium text-slate-700 mb-1.5 select-none;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-md
+      bg-brand-600 text-white font-medium
+      px-4 py-2.5 shadow-sm
+      transition-all duration-150
+      focus:outline-none focus:ring-2 focus:ring-brand-500/45 focus:ring-offset-2 focus:ring-offset-white
+      disabled:opacity-50 disabled:cursor-not-allowed hover:bg-brand-700 active:translate-y-[1px];
+    border-radius: 2px;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-md
+      bg-white hover:bg-slate-50 active:bg-slate-100
+      text-slate-800 border border-slate-300
+      font-medium px-4 py-2.5
+      transition-all duration-150
+      focus:outline-none focus:ring-2 focus:ring-slate-400/35 focus:ring-offset-2 focus:ring-offset-white
+      disabled:opacity-50 disabled:cursor-not-allowed;
+    border-radius: 2px;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-md
+      hover:bg-slate-100 text-slate-600 hover:text-slate-900
+      font-medium px-3 py-2
+      transition-all duration-150
+      disabled:opacity-50 disabled:cursor-not-allowed;
+    border-radius: 2px;
+  }
+
+  .btn-sidebar {
+    @apply w-full flex items-center gap-3 px-3 py-2.5 rounded-md
+      text-slate-600 hover:text-slate-900 hover:bg-slate-100
+      transition-all duration-150 text-sm font-medium;
+    border-radius: 2px;
+  }
+
+  .btn-sidebar-active {
+    @apply text-brand-700 bg-brand-50 hover:bg-brand-100/80 hover:text-brand-700
+      border-y border-r border-l-2 border-brand-200/70 border-l-brand-600;
+  }
+
+  .badge-role {
+    @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-xs font-medium;
+  }
+
+  .badge-admin {
+    @apply bg-red-50 text-red-700 border border-red-200;
+  }
+
+  .badge-lead {
+    @apply bg-brand-50 text-brand-700 border border-brand-200;
+  }
+
+  .badge-intern {
+    @apply bg-emerald-50 text-emerald-700 border border-emerald-200;
+  }
+
+  .divider {
+    @apply h-px w-full bg-slate-200;
+  }
+
+  .stat-card {
+    @apply card p-5 card-hover;
+  }
+
+  .page-shell {
+    @apply mx-auto max-w-[1600px] p-5 lg:p-7;
+  }
+}
+
+@layer utilities {
+  .rounded-3xl,
+  .rounded-2xl,
+  .rounded-xl,
+  .rounded-lg {
+    border-radius: 6px;
+  }
+
+  .shadow-card {
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  }
+
+  .shadow-panel {
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.10);
+  }
+
+  /* Keep semantic circles (avatars, dots, indicators) round while flattening structural UI. */
+  [class~='rounded-3xl'],
+  [class~='rounded-2xl'],
+  [class~='rounded-xl'],
+  [class~='rounded-lg'],
+  [class~='rounded-md'],
+  [class~='rounded-sm'],
+  [class*='rounded-['] {
+    border-radius: 3px !important;
+  }
+
+  [class~='rounded-md'] {
+    border-radius: 2px !important;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+
+  .notification-context-highlight {
+    background: #ffffff;
+    animation: notificationPulse 0.42s ease-in-out 3;
+  }
+
+  @keyframes notificationPulse {
+    0%, 100% {
+      background-color: #ffffff;
+      box-shadow: none;
+    }
+    50% {
+      background-color: #fee2e2;
+      box-shadow: inset 3px 0 0 #dc2626, 0 0 0 1px rgba(220, 38, 38, 0.18);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
