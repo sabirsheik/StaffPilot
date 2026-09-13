@@ -8,6 +8,7 @@ import { ROLES } from '../../constants/roles';
 import { Button, TextField, SelectField } from '../../components/ui/Form';
 import { DataTable } from '../../components/ui/DataTable';
 import { ConfirmDialog } from '../../components/ui/ConfirmDialog';
+import { getAssetUrl } from '../../lib/axios';
 
 const STATUS_OPTIONS = [
   { value: 'planning', label: 'Planning' },
@@ -415,7 +416,7 @@ const ProjectManagementPage = () => {
                         <div className="font-medium text-slate-900">{file.originalName}</div>
                         <div className="mt-1 text-xs text-slate-400">{Math.round(file.size / 1024)} KB</div>
                       </div>
-                      <a href={file.path || `/uploads/projects/${file.storedName}`} target="_blank" rel="noreferrer" className="text-xs font-medium text-brand-600">Preview</a>
+                      <a href={getAssetUrl(file.path || `/uploads/projects/${file.storedName}`)} target="_blank" rel="noreferrer" className="text-xs font-medium text-brand-600">Preview</a>
                     </div>
                   ))}
                 </div>

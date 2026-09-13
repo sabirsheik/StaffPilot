@@ -77,7 +77,7 @@ MONGO_URI=mongodb://127.0.0.1:27017/staffpilot
 JWT_SECRET=replace-with-a-long-random-secret
 JWT_EXPIRE=6d
 SUPER_ADMIN_USERNAME=admin
-SUPER_ADMIN_PASSWORD=replace-before-use
+SUPER_ADMIN_PASSWORD=admin123
 CLIENT_URL=http://localhost:5173
 ```
 
@@ -133,6 +133,14 @@ npm start
 ```
 
 The Vite proxy is a development feature. For production, serve the client through a web server or hosting platform and configure that layer to route `/api` and `/uploads` to the API service. Configure CORS with the deployed client URL.
+
+For a separately hosted API, create `client/.env.local` (or configure the variable in the frontend hosting dashboard) before building:
+
+```env
+VITE_API_BASE_URL=https://api.example.com/api
+```
+
+The client reads this value at build time. Keep `VITE_API_BASE_URL=/api` when the frontend host proxies `/api` and `/uploads` to the backend. Set the server's `CLIENT_URL` to the exact deployed frontend origin.
 
 ## Quality Checks
 

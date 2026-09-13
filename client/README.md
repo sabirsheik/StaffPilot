@@ -92,6 +92,22 @@ API calls are defined in [src/api/endpoints.ts](src/api/endpoints.ts) and use th
 - Normalizes network and API errors
 - Redirects unauthenticated users to `/login` while preserving the requested path
 
+### Frontend environment
+
+Copy `.env.example` to `.env.local` for local overrides. Vite exposes only variables prefixed with `VITE_` to browser code.
+
+```env
+VITE_API_BASE_URL=/api
+```
+
+Use `/api` when the frontend host forwards `/api` and `/uploads` to the server. If the API is deployed separately, set the public API path instead, for example:
+
+```env
+VITE_API_BASE_URL=https://api.example.com/api
+```
+
+The value is compiled into the client during `npm run build`, so update the hosting provider's frontend environment variable and rebuild/redeploy after changing it. API requests then go to `${VITE_API_BASE_URL}/auth/...`, `${VITE_API_BASE_URL}/projects/...`, and so on. Uploaded files use the same backend origin.
+
 The API contract and server configuration are documented in [../server/README.md](../server/README.md).
 
 ## Production Delivery
@@ -101,7 +117,7 @@ npm run build
 npm run preview
 ```
 
-For deployment, publish the generated `dist/` directory through a static host or web server. Configure the web server to forward `/api` and `/uploads` to the StaffPilot API, and enable SPA fallback to `index.html` for client-side routes.
+For deployment, publish the generated `dist/` directory through a static host or web server and enable SPA fallback to `index.html`. Either forward `/api` and `/uploads` to the StaffPilot API, or set `VITE_API_BASE_URL` to the separately deployed API before building. The server's `CLIENT_URL` must equal the deployed frontend origin.
 
 ## Verification
 

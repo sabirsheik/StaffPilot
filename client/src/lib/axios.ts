@@ -1,6 +1,14 @@
 import axios from 'axios';
 import { TOKEN_KEY } from '../constants/roles';
 
+const configuredApiBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim();
+export const apiBaseUrl = (configuredApiBaseUrl || '/api').replace(/\/+$/, '');
+
+export const getAssetUrl = (assetPath: string): string => {
+  if (/^https?:\/\//i.test(assetPath)) return assetPath;
+  return new URL(assetPath, apiBaseUrl.startsWith('http') ? apiBaseUrl : window.location.origin).toString();
+};
+
 const getToken = (): string | null => {
   try {
     return localStorage.getItem(TOKEN_KEY);
@@ -10,7 +18,7 @@ const getToken = (): string | null => {
 };
 
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: apiBaseUrl,
   timeout: 15000,
   withCredentials: true,
   headers: {

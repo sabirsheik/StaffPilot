@@ -9,6 +9,7 @@ import { useInterns } from '../hooks/useApi';
 import { SelectField, TextField, Button } from '../components/ui/Form';
 import Pagination from '../components/ui/Pagination';
 import { Spinner } from '../components/ui/Spinner';
+import { getAssetUrl } from '../lib/axios';
 
 const PAGE_SIZE = 6;
 
@@ -595,7 +596,7 @@ const TaskManagementPage = () => {
                                   </div>
                                 </div>
                                 <a
-                                  href={task.submission.file.path || `/uploads/tasks/${task.submission.file.storedName}`}
+                                  href={getAssetUrl(task.submission.file.path || `/uploads/tasks/${task.submission.file.storedName}`)}
                                   target="_blank"
                                   rel="noreferrer"
                                   className="shrink-0 text-xs font-semibold text-brand-600 transition-colors hover:text-brand-800 focus:outline-none focus:ring-2 focus:ring-brand-500/25"
