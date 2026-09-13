@@ -20,16 +20,16 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.5.2",
     "multer": "^2.3.0",
-    "@types/node": "^26.5.1"
-  },
-  "devDependencies": {
     "@types/cookie-parser": "^1.4.10",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/multer": "^2.2.0",
-    "nodemon": "^3.1.4",
-    "tsx": "^4.23.13",
+    "@types/node": "^26.5.1",
     "typescript": "^7.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4",
+    "tsx": "^4.23.13"
   }
 }
