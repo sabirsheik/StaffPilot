@@ -129,6 +129,7 @@ Start the API:
 
 ```bash
 cd server
+npm run build
 npm start
 ```
 

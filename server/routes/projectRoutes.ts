@@ -2,9 +2,11 @@ import express from 'express';
 import multer from 'multer';
 import path from 'path';
 import { body, param } from 'express-validator';
+import fs from 'fs';
 import { protect, authorize } from '../middleware/auth.js';
 import validateRequest from '../middleware/validate.js';
 import { ROLES } from '../models/User.js';
+import { PROJECT_UPLOAD_DIR } from '../config/storage.js';
 import {
   listProjects,
   createProject,
@@ -18,7 +20,9 @@ import {
 } from '../controllers/projectController.js';
 
 const router = express.Router();
-const upload = multer({ dest: 'uploads/projects/tmp', limits: { fileSize: 10 * 1024 * 1024 } });
+const projectTempDir = path.join(PROJECT_UPLOAD_DIR, 'tmp');
+fs.mkdirSync(projectTempDir, { recursive: true });
+const upload = multer({ dest: projectTempDir, limits: { fileSize: 10 * 1024 * 1024 } });
 
 router.use(protect);
 

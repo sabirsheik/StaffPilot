@@ -25,7 +25,7 @@ The server is the StaffPilot REST API. It owns authentication, authorization, va
 
 ```text
 server/
-├── config/db.ts          # MongoDB connection and retry handling
+├── config/               # Environment, database, and storage configuration
 ├── controllers/          # Request handlers and business logic
 ├── middleware/           # Auth, validation, and error middleware
 ├── models/               # Mongoose schemas
@@ -52,6 +52,8 @@ JWT_EXPIRE=6d
 SUPER_ADMIN_USERNAME=admin
 SUPER_ADMIN_PASSWORD=replace-before-use
 CLIENT_URL=http://localhost:5173
+# Optional durable storage path for project and task uploads
+# UPLOADS_DIR=/var/lib/staffpilot/uploads
 ```
 
 | Variable | Description |
@@ -64,6 +66,7 @@ CLIENT_URL=http://localhost:5173
 | `SUPER_ADMIN_USERNAME` | Administrator bootstrap username |
 | `SUPER_ADMIN_PASSWORD` | Administrator bootstrap password; replace before deployment |
 | `CLIENT_URL` | Trusted frontend origin used by production CORS |
+| `UPLOADS_DIR` | Optional durable directory for uploaded files |
 
 Never commit `.env`, credentials, or sensitive uploads. Use a secrets manager in production where available.
 
@@ -75,11 +78,14 @@ npm install
 npm run dev
 ```
 
-`npm run dev` starts `tsx watch server.ts`. For a production process:
+`npm run dev` starts `tsx watch server.ts`. Build and start the production process with:
 
 ```bash
+npm run build
 npm start
 ```
+
+The production start command runs the compiled `dist/server.js`. Startup fails immediately when required production variables are missing or MongoDB is unavailable, instead of accepting traffic before the database is ready.
 
 The API listens on `http://localhost:5000` by default. Check readiness with:
 
@@ -120,7 +126,8 @@ Authentication routes include `POST /api/auth/login`, `POST /api/auth/register`,
 - CORS allows localhost client origins during development and `CLIENT_URL` in production.
 - Security headers include content-type sniffing, clickjacking, referrer, and permissions policies.
 - Request bodies are limited to 10 MB.
-- MongoDB connection failures are logged and retried; connection events are also monitored.
+- Production startup validates required secrets, waits for MongoDB, and exits cleanly on fatal startup errors.
+- Helmet security headers, request rate limiting, bounded request bodies, and upload size limits are enabled.
 - Use HTTPS, rotate secrets, restrict MongoDB network access, and place uploaded files on durable access-controlled storage in production.
 
 ## Verification

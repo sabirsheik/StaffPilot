@@ -1,7 +1,7 @@
-// @ts-nocheck
+import type { ErrorRequestHandler } from 'express';
 import ErrorResponse from '../utils/errorResponse.js';
 
-const errorHandler = (err, req, res, next) => {
+const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
   let error = { ...err };
   error.message = err.message || 'Internal Server Error';
 
@@ -27,7 +27,7 @@ const errorHandler = (err, req, res, next) => {
   }
 
   if (err.name === 'ValidationError') {
-    const messages = Object.values(err.errors).map((e) => e.message);
+    const messages = Object.values(err.errors).map((e: any) => e.message);
     const message = messages.join('. ');
     error = new ErrorResponse(message, 400);
   }
@@ -44,14 +44,23 @@ const errorHandler = (err, req, res, next) => {
     error = new ErrorResponse('Invalid JSON payload.', 400);
   }
 
+  if (err.name === 'MulterError') {
+    const message = err.code === 'LIMIT_FILE_SIZE'
+      ? 'Uploaded file exceeds the 10 MB limit.'
+      : err.message || 'File upload failed.';
+    error = new ErrorResponse(message, 400);
+  }
+
   if (err.message?.includes('Unexpected token') && err.status === 400) {
     error = new ErrorResponse('Invalid request body format.', 400);
   }
 
-  const statusCode = error.statusCode || 500;
-  const response = {
+  const statusCode = Number(error.statusCode) || Number(err.status) || 500;
+  const response: { success: boolean; error: string; stack?: string } = {
     success: false,
-    error: error.message || 'Server Error',
+    error: statusCode >= 500 && process.env.NODE_ENV === 'production'
+      ? 'Internal server error.'
+      : error.message || 'Server Error',
   };
 
   if (process.env.NODE_ENV === 'development') {
@@ -61,7 +70,7 @@ const errorHandler = (err, req, res, next) => {
   res.status(statusCode).json(response);
 };
 
-function capitalize(str) {
+function capitalize(str: string) {
   if (!str) return str;
   return str.charAt(0).toUpperCase() + str.slice(1);
 }

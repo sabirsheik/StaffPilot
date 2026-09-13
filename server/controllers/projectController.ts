@@ -5,9 +5,9 @@ import asyncHandler from '../utils/asyncHandler.js';
 import ErrorResponse from '../utils/errorResponse.js';
 import Project from '../models/Project.js';
 import User, { ROLES } from '../models/User.js';
+import { PROJECT_UPLOAD_DIR } from '../config/storage.js';
 import { notifyProjectActivity } from './notificationController.js';
 
-const PROJECT_UPLOAD_DIR = path.resolve('uploads/projects');
 const ALLOWED_MIME_TYPES = new Set(['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/zip', 'application/x-zip-compressed']);
 const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
 

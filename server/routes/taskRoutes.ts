@@ -3,6 +3,7 @@ import fs from 'fs';
 import multer from 'multer';
 import path from 'path';
 import { body, param } from 'express-validator';
+import { TASK_UPLOAD_DIR } from '../config/storage.js';
 import { protect, authorize } from '../middleware/auth.js';
 import validateRequest from '../middleware/validate.js';
 import { ROLES } from '../models/User.js';
@@ -17,7 +18,7 @@ import {
 } from '../controllers/taskController.js';
 
 const router = express.Router();
-const submissionTempDir = path.resolve('uploads/tasks/tmp');
+const submissionTempDir = path.join(TASK_UPLOAD_DIR, 'tmp');
 fs.mkdirSync(submissionTempDir, { recursive: true });
 const submissionUpload = multer({ dest: submissionTempDir, limits: { fileSize: 10 * 1024 * 1024 } });
 

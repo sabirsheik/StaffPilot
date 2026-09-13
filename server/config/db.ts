@@ -1,29 +1,19 @@
-// @ts-nocheck
 import mongoose from 'mongoose';
+import { env } from './env.js';
 
-const connectDB = async () => {
-  const mongoUri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/staffpilot';
-
+const connectDB = async (): Promise<void> => {
   const options = {
     maxPoolSize: 10,
     serverSelectionTimeoutMS: 5000,
     socketTimeoutMS: 45000,
   };
 
-  try {
-    const conn = await mongoose.connect(mongoUri, options);
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
-  } catch (error) {
-    console.error(`DB Connection Error: ${error.message}`);
-    console.warn('Retrying MongoDB connection in 5 seconds...');
-    setTimeout(() => {
-      connectDB().catch(() => undefined);
-    }, 5000);
-  }
+  const conn = await mongoose.connect(env.mongoUri, options);
+  console.log(`MongoDB Connected: ${conn.connection.host}`);
 };
 
 mongoose.connection.on('disconnected', () => {
-  console.warn('MongoDB disconnected. Attempting to reconnect...');
+  console.warn('MongoDB disconnected.');
 });
 
 mongoose.connection.on('error', (err) => {

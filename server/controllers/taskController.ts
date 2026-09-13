@@ -5,6 +5,7 @@ import asyncHandler from '../utils/asyncHandler.js';
 import ErrorResponse from '../utils/errorResponse.js';
 import Task from '../models/Task.js';
 import User, { ROLES } from '../models/User.js';
+import { TASK_UPLOAD_DIR } from '../config/storage.js';
 import { createNotificationForUsers } from './notificationController.js';
 
 const buildPagination = (page, limit) => {
@@ -13,7 +14,6 @@ const buildPagination = (page, limit) => {
   return { page: p, limit: l, skip: (p - 1) * l };
 };
 
-const TASK_UPLOAD_DIR = path.resolve('uploads/tasks');
 const ALLOWED_SUBMISSION_TYPES = new Set([
   'application/pdf',
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
