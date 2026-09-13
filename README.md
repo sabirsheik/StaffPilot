@@ -77,7 +77,7 @@ MONGO_URI=mongodb://127.0.0.1:27017/staffpilot
 JWT_SECRET=replace-with-a-long-random-secret
 JWT_EXPIRE=6d
 SUPER_ADMIN_USERNAME=admin
-SUPER_ADMIN_PASSWORD=replace-before-use
+SUPER_ADMIN_PASSWORD=admin123
 CLIENT_URL=http://localhost:5173
 ```
 
