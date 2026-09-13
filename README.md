@@ -117,6 +117,20 @@ curl http://localhost:5000/api/health
 
 ## Production Build
 
+For Render, the repository includes `render.yaml`. Set the service root directory to `server` if configuring the service manually, then use:
+
+```bash
+npm ci --include=dev && npm run build
+```
+
+Start command:
+
+```bash
+npm start
+```
+
+After changing dependencies, trigger a fresh deploy/clear build cache so the service does not reuse an older `package-lock.json` or `node_modules` directory.
+
 Build the browser application:
 
 ```bash
