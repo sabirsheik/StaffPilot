@@ -46,7 +46,7 @@ app.use(rateLimit({
   limit: 300,
   standardHeaders: 'draft-8',
   legacyHeaders: false,
-  skip: (req) => req.path === '/api/health',
+  skip: (req) => req.path === '/',
 }));
 
 app.use((req, res, next) => {
@@ -58,7 +58,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/api/health', (_req, res) => {
+app.get('/', (_req, res) => {
   res.status(200).json({
     success: true,
     status: 'ok',
@@ -93,7 +93,7 @@ const startServer = async () => {
   console.log('=========================================');
   console.log(`Mode: ${env.nodeEnv}`);
   console.log(`Port: ${env.port}`);
-  console.log(`Health: http://localhost:${env.port}/api/health`);
+  console.log(`Health Check: http://localhost:${env.port}`);
   console.log('=========================================');
   });
   server.on('error', (error) => {
