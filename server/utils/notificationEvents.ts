@@ -1,6 +1,16 @@
-const subscribers = new Map();
+import type { Response } from 'express';
 
-export const subscribeToNotifications = (userId, response) => {
+type NotificationEvent = {
+  recipient: unknown;
+  _id: unknown;
+  actor?: unknown;
+  entityId?: unknown;
+  [key: string]: unknown;
+};
+
+const subscribers = new Map<string, Set<Response>>();
+
+export const subscribeToNotifications = (userId: unknown, response: Response): (() => void) => {
   const key = String(userId);
   const listeners = subscribers.get(key) || new Set();
   listeners.add(response);
@@ -14,7 +24,7 @@ export const subscribeToNotifications = (userId, response) => {
   };
 };
 
-export const publishNotification = (notification) => {
+export const publishNotification = (notification: NotificationEvent) => {
   if (!notification?.recipient) return;
 
   const listeners = subscribers.get(String(notification.recipient));
