@@ -38,12 +38,23 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
+const VALID_ROLES = new Set<Role>(Object.values(ROLES));
+
+const isValidRole = (role: unknown): role is Role => typeof role === 'string' && VALID_ROLES.has(role as Role);
+
 const getStoredUser = (): UserRecord | null => {
   try {
     const raw = localStorage.getItem(USER_KEY) || localStorage.getItem(LEGACY_USER_KEY);
     if (!raw) return null;
     const parsed: unknown = JSON.parse(raw);
-    return parsed && typeof parsed === 'object' ? parsed as UserRecord : null;
+    if (!parsed || typeof parsed !== 'object') return null;
+
+    const candidate = parsed as UserRecord;
+    if (!candidate || !candidate.role || !isValidRole(candidate.role)) {
+      return null;
+    }
+
+    return candidate;
   } catch {
     return null;
   }
@@ -99,9 +110,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     try {
       const res = await authApi.getMe();
       if (res?.success && res.user) {
-        setUser(res.user);
+        const normalizedUser = res.user;
+        if (!isValidRole(normalizedUser.role) || normalizedUser.isActive === false) {
+          clearAuthStorage();
+          setUser(null);
+          setToken(null);
+          return;
+        }
+
+        setUser(normalizedUser);
         try {
-          localStorage.setItem(USER_KEY, JSON.stringify(res.user));
+          localStorage.setItem(USER_KEY, JSON.stringify(normalizedUser));
         } catch {
           // ignore storage failures
         }
@@ -168,6 +187,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       const res = await authApi.login(credentials);
       if (!res?.success) throw new Error(res?.error || 'Login failed.');
       if (!res.token || !res.user) throw new Error('Invalid response from server.');
+      if (!isValidRole(res.user.role) || res.user.isActive === false) {
+        throw new Error('Your account is not active or does not have access to this app.');
+      }
+
       localStorage.setItem(TOKEN_KEY, res.token);
       localStorage.setItem(USER_KEY, JSON.stringify(res.user));
       setToken(res.token);
@@ -189,6 +212,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       const res = await authApi.register(payload);
       if (!res?.success) throw new Error(res?.error || 'Registration failed.');
       if (!res.token || !res.user) throw new Error('Invalid response from server.');
+      if (!isValidRole(res.user.role) || res.user.isActive === false) {
+        throw new Error('This account cannot be used to access StaffPilot right now.');
+      }
+
       localStorage.setItem(TOKEN_KEY, res.token);
       localStorage.setItem(USER_KEY, JSON.stringify(res.user));
       setToken(res.token);
@@ -219,10 +246,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, []);
 
-  const hasRole = useCallback((requiredRole: Role) => Boolean(user && user.role === requiredRole), [user]);
-  const hasAnyRole = useCallback((roles: readonly Role[]) => Boolean(user && roles.includes(user.role)), [user]);
-  const getDashboardPath = useCallback(() => (user?.role ? DASHBOARD_PATHS[user.role] || '/login' : '/login'), [user]);
-  const isAuthenticated = Boolean(user && token);
+  const hasRole = useCallback((requiredRole: Role) => Boolean(user && user.isActive !== false && isValidRole(user.role) && user.role === requiredRole), [user]);
+  const hasAnyRole = useCallback((roles: readonly Role[]) => Boolean(user && user.isActive !== false && isValidRole(user.role) && roles.includes(user.role)), [user]);
+  const getDashboardPath = useCallback(() => {
+    if (!user || user.isActive === false || !isValidRole(user.role)) return '/login';
+    return DASHBOARD_PATHS[user.role] || '/login';
+  }, [user]);
+  const isAuthenticated = Boolean(user && token && user.isActive !== false && isValidRole(user.role));
 
   const value = useMemo<AuthContextValue>(() => ({
     user,
