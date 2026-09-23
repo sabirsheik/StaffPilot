@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useMemo, useState, useCallback, t
 import toast from 'react-hot-toast';
 import { useQueryClient } from '@tanstack/react-query';
 import { authApi, notificationApi } from '../api/endpoints';
-import { DASHBOARD_PATHS, LEGACY_TOKEN_KEY, LEGACY_USER_KEY, TOKEN_KEY, USER_KEY, type Role } from '../constants/roles';
+import { DASHBOARD_PATHS, LEGACY_TOKEN_KEY, LEGACY_USER_KEY, ROLES, TOKEN_KEY, USER_KEY, type Role } from '../constants/roles';
 import { extractErrorMessage } from '../lib/axios';
 import type { NotificationRecord, UnknownRecord, UserRecord } from '../types/api';
 
